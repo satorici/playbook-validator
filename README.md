@@ -1,0 +1,3 @@
+# satori-playbook-validator
+
+

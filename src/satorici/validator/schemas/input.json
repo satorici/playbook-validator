@@ -1,0 +1,79 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "array",
+    "items": {
+        "type": [
+            "string",
+            "object"
+        ],
+        "properties": {
+            "value": {
+                "type": "string"
+            },
+            "split": {
+                "description": "Character mark for splitting string/file",
+                "type": "string"
+            },
+            "file": {
+                "description": "Relative file path",
+                "type": "string"
+            },
+            "hexa": {
+                "description": "Treat value as hexadecimal bytes",
+                "type": "boolean"
+            },
+            "mutate": {
+                "description": "Mutate the input with the given mutator",
+                "enum": [
+                    "radamsa",
+                    "zzuf",
+                    "not",
+                    "all"
+                ]
+            },
+            "mutate_qty": {
+                "description": "Amount of mutations for each mutator",
+                "type": "integer",
+                "minimum": 1,
+                "default": 100
+            }
+        },
+        "dependencies": {
+            "split": {
+                "oneOf": [
+                    {
+                        "properties": {
+                            "split": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "value"
+                        ]
+                    },
+                    {
+                        "properties": {
+                            "split": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "file"
+                        ]
+                    }
+                ]
+            },
+            "hexa": [
+                "value"
+            ],
+            "mutate": [
+                "value"
+            ],
+            "mutate_qty": [
+                "mutate"
+            ]
+        },
+        "additionalProperties": false
+    },
+    "uniqueItems": true
+}

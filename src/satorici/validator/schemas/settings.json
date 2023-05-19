@@ -1,0 +1,51 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "description": "Settings block",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "mitigation": {
+            "type": "string"
+        },
+        "cron": {
+            "type": "string"
+        },
+        "timeout": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "log": {
+            "type": "string"
+        },
+        "logOnFail": {
+            "type": "string"
+        },
+        "logOnPass": {
+            "type": "string"
+        },
+        "rate": {
+            "type": "string"
+        },
+        "count": {
+            "type": "integer",
+            "maximum": 100
+        },
+        "report": {
+            "type": "string"
+        }
+    },
+    "dependencies": {
+        "cron": [
+            "name"
+        ],
+        "rate": [
+            "name"
+        ]
+    },
+    "additionalProperties": false
+}

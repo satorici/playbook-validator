@@ -1,0 +1,74 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "description": "Test",
+    "propertyNames": {
+        "pattern": "^[\\w-]+$"
+    },
+    "properties": {
+        "settings": false,
+        "assertReturnCode": {
+            "type": "integer"
+        },
+        "assertDifferent": {
+            "type": "boolean"
+        },
+        "assertStdoutSHA256": {
+            "type": [
+                "string",
+                "array"
+            ],
+            "pattern": "^[a-fA-F0-9]{64}$",
+            "items": {
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{64}$"
+            },
+            "uniqueItems": true
+        }
+    },
+    "patternProperties": {
+        "^assertStd(out|err)$": {
+            "type": "boolean"
+        },
+        "^assertStd(out|err)(Not)?(Contains|Equal)$": {
+            "type": [
+                "array",
+                "string"
+            ],
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
+        },
+        "^assertStd(out|err)(Not)?Regex$": {
+            "type": "string",
+            "format": "regex"
+        },
+        "^assert(File|Command)Exists$": {
+            "type": [
+                "array",
+                "string"
+            ],
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
+        }
+    },
+    "additionalProperties": {
+        "anyOf": [
+            {
+                "$ref": "import.json"
+            },
+            {
+                "$ref": "input.json"
+            },
+            {
+                "$ref": "command.json"
+            },
+            {
+                "$ref": "test.json"
+            }
+        ]
+    }
+}
