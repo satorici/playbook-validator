@@ -1,5 +1,6 @@
 import json
 import re
+from copy import deepcopy
 from pathlib import Path
 
 from flatdict import FlatDict
@@ -82,7 +83,7 @@ def validate_playbook(config: dict):
     if not isinstance(config, dict):
         raise TypeError("config must be a dict")
 
-    config_copy = config.copy()
+    config_copy = deepcopy(config)
 
     try:
         if config_copy.get("settings"):
