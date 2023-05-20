@@ -4,7 +4,10 @@ from pathlib import Path
 
 from flatdict import FlatDict
 from jsonschema import Draft7Validator, FormatChecker
+from jsonschema.exceptions import ValidationError
 from jsonschema.validators import RefResolver
+
+from .exceptions import PlaybookValidationError
 
 INPUT_REGEX = re.compile(r"\$\(([\w-]+)\)")
 
@@ -61,29 +64,34 @@ def validate_command_block(commands: list[list[str]], key: str, flat_config: dic
                 if key.startswith(prefix) and input_schema.is_valid(value):
                     break
             else:
-                raise Exception(f"No valid inputs for variable: {variable}")
+                raise PlaybookValidationError(
+                    f"No valid inputs for variable: {variable}"
+                )
 
         if not found_prefix:
-            raise Exception(f"Can't resolve variable: {variable}")
+            raise PlaybookValidationError(f"Can't resolve variable: {variable}")
 
 
-def validate_playbook(config):
+def validate_playbook(config: dict):
     """
-    Validate yaml loaded playbook and return corresponding dict
+    Validate yaml loaded playbook config and return corresponding dict
 
-    Raises exception on errors
+    Raises `PlaybookValidationError` on invalid playbook
     """
 
     if not isinstance(config, dict):
-        raise Exception("No identifier found")
+        raise TypeError("config must be a dict")
 
     config_copy = config.copy()
 
-    if config_copy.get("settings"):
-        settings_schema.validate(config_copy["settings"])
-        del config_copy["settings"]
+    try:
+        if config_copy.get("settings"):
+            settings_schema.validate(config_copy["settings"])
+            del config_copy["settings"]
 
-    test_schema.validate(config_copy)
+        test_schema.validate(config_copy)
+    except ValidationError as e:
+        raise PlaybookValidationError(e.message)
 
     flat_config = FlatDict(config_copy)
 

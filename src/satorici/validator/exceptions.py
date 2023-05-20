@@ -1,0 +1,2 @@
+class PlaybookValidationError(Exception):
+    pass
