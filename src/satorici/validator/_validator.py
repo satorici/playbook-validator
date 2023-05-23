@@ -8,7 +8,7 @@ from jsonschema import Draft7Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import RefResolver
 
-from .exceptions import PlaybookValidationError
+from .exceptions import PlaybookValidationError, PlaybookVariableError
 
 INPUT_REGEX = re.compile(r"\$\(([\w-]+)\)")
 
@@ -65,12 +65,14 @@ def validate_command_block(commands: list[list[str]], key: str, flat_config: dic
                 if key.startswith(prefix) and input_schema.is_valid(value):
                     break
             else:
-                raise PlaybookValidationError(
-                    f"No valid inputs for variable: {variable}"
+                raise PlaybookVariableError(
+                    f"No valid inputs for variable: {variable}", parameter=variable
                 )
 
         if not found_prefix:
-            raise PlaybookValidationError(f"Can't resolve variable: {variable}")
+            raise PlaybookVariableError(
+                f"Can't resolve variable: {variable}", parameter=variable
+            )
 
 
 def validate_playbook(config: dict):
@@ -78,6 +80,7 @@ def validate_playbook(config: dict):
     Validate yaml loaded playbook config and return corresponding dict
 
     Raises `PlaybookValidationError` on invalid playbook
+    Raises `PlaybookVariableError` on invalid playbook variables
     """
 
     if not isinstance(config, dict):
