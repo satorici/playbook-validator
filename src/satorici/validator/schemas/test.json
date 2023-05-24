@@ -12,8 +12,10 @@
         },
         "assertDifferent": {
             "type": "boolean"
-        },
-        "assertStdoutSHA256": {
+        }
+    },
+    "patternProperties": {
+        "^assertStd(out|err)SHA256$": {
             "type": [
                 "string",
                 "array"
@@ -24,9 +26,7 @@
                 "pattern": "^[a-fA-F0-9]{64}$"
             },
             "uniqueItems": true
-        }
-    },
-    "patternProperties": {
+        },
         "^assertStd(out|err)$": {
             "type": "boolean"
         },
