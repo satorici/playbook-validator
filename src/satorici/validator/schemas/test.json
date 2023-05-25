@@ -12,6 +12,9 @@
         },
         "assertDifferent": {
             "type": "boolean"
+        },
+        "assertKilled": {
+            "type": "boolean"
         }
     },
     "patternProperties": {
