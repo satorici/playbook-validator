@@ -80,6 +80,7 @@ def validate_playbook(config: dict):
     Validate yaml loaded playbook config and return corresponding dict
 
     Raises `PlaybookValidationError` on invalid playbook
+
     Raises `PlaybookVariableError` on invalid playbook variables
     """
 
