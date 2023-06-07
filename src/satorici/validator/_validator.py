@@ -71,7 +71,7 @@ def validate_command_block(commands: list[list[str]], key: str, flat_config: dic
 
         if not found_prefix:
             raise PlaybookVariableError(
-                f"Can't resolve variable: {variable}", parameter=variable
+                f"Can't resolve variable: {variable}. ", parameter=variable
             )
 
 
