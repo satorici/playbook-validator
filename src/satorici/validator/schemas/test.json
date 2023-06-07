@@ -61,16 +61,16 @@
     "additionalProperties": {
         "anyOf": [
             {
-                "$ref": "import.json"
+                "$ref": "file://./import.json"
             },
             {
-                "$ref": "input.json"
+                "$ref": "file://./input.json"
             },
             {
-                "$ref": "command.json"
+                "$ref": "file://./command.json"
             },
             {
-                "$ref": "test.json"
+                "$ref": "#"
             }
         ]
     }

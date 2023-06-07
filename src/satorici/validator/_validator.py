@@ -2,11 +2,10 @@ import json
 import re
 from copy import deepcopy
 from pathlib import Path
+from urllib.parse import urlsplit
 
+from fastjsonschema import JsonSchemaValueException, compile
 from flatdict import FlatDict
-from jsonschema import Draft7Validator, FormatChecker
-from jsonschema.exceptions import ValidationError
-from jsonschema.validators import RefResolver
 
 from .exceptions import PlaybookValidationError, PlaybookVariableError
 
@@ -21,14 +20,20 @@ with (
     open(SCHEMAS / "settings.json") as settings,
     open(SCHEMAS / "test.json") as test,
 ):
-    command_schema = Draft7Validator(json.loads(commands.read()))
-    input_schema = Draft7Validator(json.loads(inputs.read()))
-    import_schema = Draft7Validator(json.loads(imports.read()))
-    settings_schema = Draft7Validator(json.loads(settings.read()))
-    test_schema = Draft7Validator(
-        schema=json.loads(test.read()),
-        resolver=RefResolver(base_uri=f"{SCHEMAS.as_uri()}/", referrer=True),
-        format_checker=FormatChecker(("regex",)),
+
+    def file_ref_loc(uri: str):
+        _, _, path, *_ = urlsplit(uri)
+
+        with Path(SCHEMAS, path[1:]).open() as f:
+            return json.loads(f.read())
+
+    command_schema = compile(json.loads(commands.read()))
+    input_schema = compile(json.loads(inputs.read()))
+    import_schema = compile(json.loads(imports.read()))
+    settings_schema = compile(json.loads(settings.read()))
+    test_schema = compile(
+        definition=json.loads(test.read()),
+        handlers={"file": file_ref_loc},
     )
 
 split_key = lambda key: str(key).split(":")
@@ -62,7 +67,13 @@ def validate_command_block(commands: list[list[str]], key: str, flat_config: dic
             found_prefix = prefix
 
             for key, value in flat_config.items():
-                if key.startswith(prefix) and input_schema.is_valid(value):
+                try:
+                    input_schema(value)
+                    is_input = True
+                except JsonSchemaValueException:
+                    is_input = False
+
+                if key.startswith(prefix) and is_input:
                     break
             else:
                 raise PlaybookVariableError(
@@ -91,17 +102,20 @@ def validate_playbook(config: dict):
 
     try:
         if config_copy.get("settings"):
-            settings_schema.validate(config_copy["settings"])
+            settings_schema(config_copy["settings"])
             del config_copy["settings"]
 
-        test_schema.validate(config_copy)
-    except ValidationError as e:
+        test_schema(config_copy)
+    except JsonSchemaValueException as e:
         raise PlaybookValidationError(e.message)
 
     flat_config = FlatDict(config_copy)
 
     for key, value in flat_config.items():
-        if command_schema.is_valid(value):
+        try:
+            command_schema(value)
             validate_command_block(value, key, flat_config)
+        except JsonSchemaValueException:
+            continue
 
     return config
