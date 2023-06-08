@@ -114,7 +114,7 @@ def validate_references(node: dict[str], cmd_key: str):
 
             if key in variables:
                 if validate_inputs(value) or (
-                    validate_test(value) and has_input(value)
+                    isinstance(value, dict) and has_input(value)
                 ):
                     valid.add(key)
                 else:

@@ -102,6 +102,15 @@ passed_refs = [
             },
         }
     },
+    {
+        # Ref an adjacent test that has one input
+        "root": {
+            "sub": {
+                "input": ["1"],
+            },
+            "cmd": [["$(sub)"]],
+        },
+    },
 ]
 
 
