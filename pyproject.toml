@@ -18,3 +18,8 @@ build-backend = "pdm.backend"
 
 [tool.pdm.build]
 includes = ["src/satorici/"]
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest>=7.3.1",
+]
