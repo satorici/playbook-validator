@@ -169,7 +169,7 @@ def validate_playbook(config: dict):
     config_copy = deepcopy(config)
 
     try:
-        if config_copy.get("settings"):
+        if "settings" in config_copy:
             settings_schema(config_copy["settings"])
             del config_copy["settings"]
 
