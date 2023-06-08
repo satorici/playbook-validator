@@ -6,7 +6,6 @@ authors = [
     {name = "Satori CI", email = "info@satori-ci.com"},
 ]
 dependencies = [
-    "flatdict>=4.0.1",
     "fastjsonschema>=2.17.1",
 ]
 requires-python = ">=3.9"

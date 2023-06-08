@@ -6,22 +6,14 @@ name = "fastjsonschema"
 version = "2.17.1"
 summary = "Fastest Python implementation of JSON schema"
 
-[[package]]
-name = "flatdict"
-version = "4.0.1"
-summary = "Python module for interacting with nested dicts as a single level dict with delimited keys."
-
 [metadata]
 lock_version = "4.2"
 cross_platform = true
 groups = ["default"]
-content_hash = "sha256:688d95db89b5f02166a7800bc4eb6006199357419697d0db1b30e6130a7a05c2"
+content_hash = "sha256:53096dfa2043f3e82eeef69f3f4e0f35c27d32318512d9dd3f9db53df3852d83"
 
 [metadata.files]
 "fastjsonschema 2.17.1" = [
     {url = "https://files.pythonhosted.org/packages/a4/e1/cda97fa4447e138f1f0ccfdaf678fa247415f7e9f4942d856fd63c7d863c/fastjsonschema-2.17.1.tar.gz", hash = "sha256:f4eeb8a77cef54861dbf7424ac8ce71306f12cbb086c45131bcba2c6a4f726e3"},
     {url = "https://files.pythonhosted.org/packages/d4/a1/b3816c7945742ee95e2fb68dd59aaa205c9ce53ffd90704f70c2207a7b4d/fastjsonschema-2.17.1-py3-none-any.whl", hash = "sha256:4b90b252628ca695280924d863fe37234eebadc29c5360d322571233dc9746e0"},
-]
-"flatdict 4.0.1" = [
-    {url = "https://files.pythonhosted.org/packages/3e/0d/424de6e5612f1399ff69bf86500d6a62ff0a4843979701ae97f120c7f1fe/flatdict-4.0.1.tar.gz", hash = "sha256:cd32f08fd31ed21eb09ebc76f06b6bd12046a24f77beb1fd0281917e47f26742"},
 ]

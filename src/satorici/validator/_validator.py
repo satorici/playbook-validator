@@ -5,7 +5,6 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from fastjsonschema import JsonSchemaValueException, compile
-from flatdict import FlatDict
 
 from .exceptions import PlaybookValidationError, PlaybookVariableError
 
@@ -27,63 +26,132 @@ with (
         with Path(SCHEMAS, path[1:]).open() as f:
             return json.loads(f.read())
 
-    command_schema = compile(json.loads(commands.read()))
-    input_schema = compile(json.loads(inputs.read()))
-    import_schema = compile(json.loads(imports.read()))
+    commands_schema = compile(json.loads(commands.read()))
+    inputs_schema = compile(json.loads(inputs.read()))
+    imports_schema = compile(json.loads(imports.read()))
     settings_schema = compile(json.loads(settings.read()))
     test_schema = compile(
         definition=json.loads(test.read()),
         handlers={"file": file_ref_loc},
     )
 
-split_key = lambda key: str(key).split(":")
-get_leaf = lambda key: split_key(key)[-1]
+
+def _validate(schema, value, raise_exception=False):
+    try:
+        schema(value)
+        return True
+    except JsonSchemaValueException as e:
+        if raise_exception:
+            raise e
+
+        return False
 
 
-def validate_command_block(commands: list[list[str]], key: str, flat_config: dict[str]):
-    variables = set()
+def validate_inputs(inputs: list, raise_exception=False):
+    return _validate(inputs_schema, inputs, raise_exception)
 
-    for command in commands:
+
+def validate_commands(commands: list, raise_exception=False):
+    return _validate(commands_schema, commands, raise_exception)
+
+
+def validate_imports(inports: list, raise_exception=False):
+    return _validate(imports_schema, inports, raise_exception)
+
+
+def validate_test(test: dict, raise_exception=False):
+    return _validate(test_schema, test, raise_exception)
+
+
+def validate_settings(settings: dict, raise_exception=False):
+    return _validate(settings_schema, settings, raise_exception)
+
+
+def has_input(d: dict[str]):
+    stack = [v for k, v in d.items() if "^" not in k]
+
+    while stack:
+        current = stack.pop()
+
+        if validate_inputs(current):
+            return True
+        elif isinstance(current, dict):
+            stack.extend(v for k, v in current.items() if "^" not in k)
+
+    return False
+
+
+def get_reference_names(command_block: list[list[str]]):
+    variables: set[str] = set()
+
+    for command in command_block:
         variables.update(INPUT_REGEX.findall(command[0]))
 
-    if not variables:
-        return
+    return variables
 
-    keys: list[str] = flat_config.keys()
-    previous_paths = list(reversed(keys[: keys.index(key)]))
 
-    path = split_key(key)
-    levels = len(path)
+def validate_references(node: dict[str], cmd_key: str):
+    variables = get_reference_names(node[cmd_key])
 
-    for variable in variables:
-        prefixes = list(":".join(path[:i] + [variable]) for i in range(levels))
-        prefixes.reverse()
-        found_prefix = None
+    current = node
+    limit_key = cmd_key
+    valid: set[str] = set()
+    failed = False
 
-        for prefix in prefixes:
-            if not any((p.startswith(prefix) for p in previous_paths)):
-                continue
-
-            found_prefix = prefix
-
-            for key, value in flat_config.items():
-                try:
-                    input_schema(value)
-                    is_input = True
-                except JsonSchemaValueException:
-                    is_input = False
-
-                if key.startswith(prefix) and is_input:
-                    break
+    while current and not failed:
+        if current.get("^key") in variables:
+            if has_input(current["^dict"][current["^key"]]):
+                valid.add(current["^key"])
             else:
-                raise PlaybookVariableError(
-                    f"No valid inputs for variable: {variable}", parameter=variable
-                )
+                failed = True
+                break
 
-        if not found_prefix:
-            raise PlaybookVariableError(
-                f"Can't resolve variable: {variable}. ", parameter=variable
-            )
+        for key, value in (i for i in current.items() if "^" not in i[0]):
+            if key == limit_key:
+                limit_key = current.get("^key")
+                current = current.get("^dict")
+                break
+
+            if key in variables:
+                if validate_inputs(value) or (
+                    validate_test(value) and has_input(value)
+                ):
+                    valid.add(key)
+                else:
+                    failed = True
+                    break
+
+    if valid != variables:
+        v = variables - valid
+        raise PlaybookVariableError(
+            f"No valid inputs for variable: {', '.join(v)}.", parameter=v
+        )
+
+
+def iterate_dict(d: dict):
+    stack = [((), d)]
+
+    while stack:
+        path, current = stack.pop()
+
+        for k, v in (i for i in current.items() if "^" not in i[0]):
+            if isinstance(v, dict):
+                stack.append((path + (k,), v))
+            elif validate_commands(v) and get_reference_names(v):
+                validate_references(current, k)
+
+
+def add_parent_info(d: dict):
+    stack = [(d, None, None)]
+
+    while stack:
+        current, current_parent_key, current_parent_dict = stack.pop()
+        current["^key"] = current_parent_key
+        current["^dict"] = current_parent_dict
+
+        for key, value in (i for i in current.items() if "^" not in i[0]):
+            if isinstance(value, dict):
+                stack.append((value, key, current))
 
 
 def validate_playbook(config: dict):
@@ -109,13 +177,7 @@ def validate_playbook(config: dict):
     except JsonSchemaValueException as e:
         raise PlaybookValidationError(e.message)
 
-    flat_config = FlatDict(config_copy)
-
-    for key, value in flat_config.items():
-        try:
-            command_schema(value)
-            validate_command_block(value, key, flat_config)
-        except JsonSchemaValueException:
-            continue
+    add_parent_info(config_copy)
+    iterate_dict(config_copy)
 
     return config

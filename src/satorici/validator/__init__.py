@@ -1,9 +1,9 @@
 from ._validator import (
     INPUT_REGEX,
-    command_schema,
-    import_schema,
-    input_schema,
-    settings_schema,
-    test_schema,
+    validate_commands,
+    validate_imports,
+    validate_inputs,
     validate_playbook,
+    validate_settings,
+    validate_test,
 )
