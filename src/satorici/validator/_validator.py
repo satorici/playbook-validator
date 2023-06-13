@@ -131,6 +131,8 @@ def validate_references(node: dict[str], cmd_key: str):
 def iterate_dict(d: dict):
     stack = [((), d)]
 
+    execution_found = False
+
     while stack:
         path, current = stack.pop()
 
@@ -139,6 +141,10 @@ def iterate_dict(d: dict):
                 stack.append((path + (k,), v))
             elif validate_commands(v) and get_reference_names(v):
                 validate_references(current, k)
+                execution_found = True
+
+    if not execution_found:
+        raise PlaybookValidationError("No executions found.")
 
 
 def add_parent_info(d: dict):
