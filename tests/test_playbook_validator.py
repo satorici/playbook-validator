@@ -15,9 +15,32 @@ def test_empty_settings():
         validate_playbook(playbook)
 
 
-def test_playbook_without_executions():
-    playbook = {
+no_execs = [
+    {
         "tests": {"input": ["1"]},
-    }
+    },
+    {
+        "input": ["1"],
+    },
+]
+
+
+@pytest.mark.parametrize("playbook", no_execs)
+def test_playbook_without_executions(playbook):
     with pytest.raises(PlaybookValidationError):
         validate_playbook(playbook)
+
+
+with_execs = [
+    {
+        "tests": {"cmd": [["echo"]]},
+    },
+    {
+        "cmd": [["echo"]],
+    },
+]
+
+
+@pytest.mark.parametrize("playbook", with_execs)
+def test_playbook_with_executions(playbook):
+    validate_playbook(playbook)

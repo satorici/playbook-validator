@@ -139,9 +139,10 @@ def iterate_dict(d: dict):
         for k, v in (i for i in current.items() if "^" not in i[0]):
             if isinstance(v, dict):
                 stack.append((path + (k,), v))
-            elif validate_commands(v) and get_reference_names(v):
-                validate_references(current, k)
+            elif validate_commands(v):
                 execution_found = True
+                if get_reference_names(v):
+                    validate_references(current, k)
 
     if not execution_found:
         raise PlaybookValidationError("No executions found.")
