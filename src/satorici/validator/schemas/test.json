@@ -6,7 +6,9 @@
         "pattern": "^[\\w-]+$"
     },
     "properties": {
-        "settings": false,
+        "settings": {
+            "$ref": "file://./settings.json"
+        },
         "assertReturnCode": {
             "type": "integer"
         },

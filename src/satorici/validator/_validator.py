@@ -176,10 +176,6 @@ def validate_playbook(config: dict):
     config_copy = deepcopy(config)
 
     try:
-        if "settings" in config_copy:
-            settings_schema(config_copy["settings"])
-            del config_copy["settings"]
-
         test_schema(config_copy)
     except JsonSchemaValueException as e:
         raise PlaybookValidationError(e.message)
