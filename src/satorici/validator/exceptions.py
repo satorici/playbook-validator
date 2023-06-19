@@ -6,3 +6,7 @@ class PlaybookVariableError(Exception):
     def __init__(self, *args: object, parameter: str) -> None:
         super().__init__(*args)
         self.parameter = parameter
+
+
+class NoExecutionsError(PlaybookValidationError):
+    pass

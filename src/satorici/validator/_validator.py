@@ -6,7 +6,11 @@ from urllib.parse import urlsplit
 
 from fastjsonschema import JsonSchemaValueException, compile
 
-from .exceptions import PlaybookValidationError, PlaybookVariableError
+from .exceptions import (
+    NoExecutionsError,
+    PlaybookValidationError,
+    PlaybookVariableError,
+)
 
 INPUT_REGEX = re.compile(r"\$\(([\w-]+)\)")
 
@@ -145,7 +149,7 @@ def iterate_dict(d: dict):
                     validate_references(current, k)
 
     if not execution_found:
-        raise PlaybookValidationError("No executions found.")
+        raise NoExecutionsError("No executions found.")
 
 
 def add_parent_info(d: dict):
