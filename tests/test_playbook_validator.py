@@ -44,3 +44,26 @@ with_execs = [
 @pytest.mark.parametrize("playbook", with_execs)
 def test_playbook_with_executions(playbook):
     validate_playbook(playbook)
+
+
+def test_wrong_assert():
+    playbook = {
+        "assertStdoutGibberish": 1,
+        "cmd": [
+            ["echo"],
+        ],
+    }
+
+    with pytest.raises(PlaybookValidationError):
+        validate_playbook(playbook)
+
+
+def test_correct_assert():
+    playbook = {
+        "assertReturnCode": 1,
+        "cmd": [
+            ["echo"],
+        ],
+    }
+
+    validate_playbook(playbook)

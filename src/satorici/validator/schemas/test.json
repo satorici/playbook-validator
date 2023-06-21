@@ -3,7 +3,26 @@
     "type": "object",
     "description": "Test",
     "propertyNames": {
-        "pattern": "^[\\w-]+$"
+        "pattern": "^[\\w-]+$",
+        "if": {
+            "pattern": "^assert"
+        },
+        "then": {
+            "oneOf": [
+                {
+                    "pattern": "^assert(ReturnCode|Different|Killed)$"
+                },
+                {
+                    "pattern": "^assertStd(out|err)(SHA256)?$"
+                },
+                {
+                    "pattern": "^assertStd(out|err)(Not)?(Contains|Equal|Regex)$"
+                },
+                {
+                    "pattern": "^assert(File|Command)Exists$"
+                }
+            ]
+        }
     },
     "properties": {
         "settings": {
