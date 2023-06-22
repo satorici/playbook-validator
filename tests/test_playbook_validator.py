@@ -83,3 +83,33 @@ def test_monitor_without_notification():
 
     with pytest.warns(NoLogMonitorWarning):
         validate_playbook(playbook)
+
+
+def test_cron_monitor():
+    playbook = {
+        "settings": {
+            "name": "aaaa",
+            "cron": "0 0 0 0 0",
+            "rate": "0 minutes",
+        },
+        "cmd": [
+            ["echo"],
+        ],
+    }
+
+    with pytest.raises(PlaybookValidationError):
+        validate_playbook(playbook)
+
+
+def test_unnamed_monitor():
+    playbook = {
+        "settings": {
+            "rate": "0 minutes",
+        },
+        "cmd": [
+            ["echo"],
+        ],
+    }
+
+    with pytest.raises(PlaybookValidationError):
+        validate_playbook(playbook)

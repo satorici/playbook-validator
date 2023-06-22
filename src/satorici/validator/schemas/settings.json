@@ -48,5 +48,35 @@
             "name"
         ]
     },
+    "allOf": [
+        {
+            "oneOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "cron": true
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "rate": false
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "rate": true
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "cron": false
+                        }
+                    }
+                }
+            ]
+        }
+    ],
     "additionalProperties": false
 }
