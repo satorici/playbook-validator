@@ -2,6 +2,7 @@ import pytest
 
 from satorici.validator import validate_playbook
 from satorici.validator.exceptions import PlaybookValidationError
+from satorici.validator.warnings import NoLogMonitorWarning
 
 
 def test_empty_settings():
@@ -67,3 +68,18 @@ def test_correct_assert():
     }
 
     validate_playbook(playbook)
+
+
+def test_monitor_without_notification():
+    playbook = {
+        "settings": {
+            "name": "aaaa",
+            "cron": "0 0 0 0 0",
+        },
+        "cmd": [
+            ["echo"],
+        ],
+    }
+
+    with pytest.warns(NoLogMonitorWarning):
+        validate_playbook(playbook)
