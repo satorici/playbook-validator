@@ -25,9 +25,6 @@
         }
     },
     "properties": {
-        "settings": {
-            "$ref": "file://./settings.json"
-        },
         "assertReturnCode": {
             "type": "integer"
         },

@@ -40,35 +40,59 @@ with (
     )
 
 
-def _validate(schema, value, raise_exception=False):
+def _validate(schema, value):
     try:
         schema(value)
-        return True
     except JsonSchemaValueException as e:
-        if raise_exception:
-            raise e
+        raise PlaybookValidationError(e.message)
 
+
+def _is(validator, value):
+    try:
+        validator(value)
+        return True
+    except PlaybookValidationError:
         return False
 
 
-def validate_inputs(inputs: list, raise_exception=False):
-    return _validate(inputs_schema, inputs, raise_exception)
+def validate_input_group(inputs: list):
+    _validate(inputs_schema, inputs)
 
 
-def validate_commands(commands: list, raise_exception=False):
-    return _validate(commands_schema, commands, raise_exception)
+def is_input_group(inputs: list):
+    return _is(validate_input_group, inputs)
 
 
-def validate_imports(inports: list, raise_exception=False):
-    return _validate(imports_schema, inports, raise_exception)
+def validate_command_group(commands: list):
+    _validate(commands_schema, commands)
 
 
-def validate_test(test: dict, raise_exception=False):
-    return _validate(test_schema, test, raise_exception)
+def is_command_group(commands: list):
+    return _is(validate_command_group, commands)
 
 
-def validate_settings(settings: dict, raise_exception=False):
-    return _validate(settings_schema, settings, raise_exception)
+def validate_import_group(imports: list):
+    _validate(imports_schema, imports)
+
+
+def is_import_group(imports: list):
+    return _is(validate_import_group, imports)
+
+
+def validate_test(test: dict):
+    _validate(test_schema, test)
+
+
+def is_test(test: dict):
+    return _is(validate_test, test)
+
+
+def validate_settings(settings: dict):
+    _validate(settings_schema, settings)
+
+
+def is_settings(settings: dict):
+    return _is(validate_settings, settings)
 
 
 def has_input(d: dict[str]):
@@ -77,7 +101,7 @@ def has_input(d: dict[str]):
     while stack:
         current = stack.pop()
 
-        if validate_inputs(current):
+        if is_input_group(current):
             return True
         elif isinstance(current, dict):
             stack.extend(v for k, v in current.items() if "^" not in k)
@@ -117,7 +141,7 @@ def validate_references(node: dict[str], cmd_key: str):
                 break
 
             if key in variables:
-                if validate_inputs(value) or (
+                if is_input_group(value) or (
                     isinstance(value, dict) and has_input(value)
                 ):
                     valid.add(key)
@@ -143,7 +167,7 @@ def iterate_dict(d: dict):
         for k, v in (i for i in current.items() if "^" not in i[0]):
             if isinstance(v, dict):
                 stack.append((path + (k,), v))
-            elif validate_commands(v):
+            elif is_command_group(v):
                 execution_found = True
                 if get_reference_names(v):
                     validate_references(current, k)
@@ -179,12 +203,14 @@ def validate_playbook(config: dict):
 
     config_copy = deepcopy(config)
 
-    try:
-        test_schema(config_copy)
-    except JsonSchemaValueException as e:
-        raise PlaybookValidationError(e.message)
+    if "settings" in config_copy:
+        validate_settings(config_copy.pop("settings"))
+
+    validate_test(config_copy)
 
     add_parent_info(config_copy)
     iterate_dict(config_copy)
 
-    return config
+
+def is_playbook(config: dict):
+    _is(validate_playbook, config)

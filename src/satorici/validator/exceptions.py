@@ -2,7 +2,7 @@ class PlaybookValidationError(Exception):
     pass
 
 
-class PlaybookVariableError(Exception):
+class PlaybookVariableError(PlaybookValidationError):
     def __init__(self, *args: object, parameter: str) -> None:
         super().__init__(*args)
         self.parameter = parameter
