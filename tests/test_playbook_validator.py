@@ -128,3 +128,16 @@ def test_bad_timeout_settings():
 
     with pytest.raises(PlaybookValidationError):
         validate_playbook(playbook)
+
+
+def test_bad_settings():
+    playbook = {
+        "settings": {
+            "timeout": 1,
+        },
+        "cmd": [
+            ["echo"],
+        ],
+    }
+
+    validate_playbook(playbook)

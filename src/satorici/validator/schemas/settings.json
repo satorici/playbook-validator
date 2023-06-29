@@ -53,7 +53,7 @@
     },
     "allOf": [
         {
-            "oneOf": [
+            "anyOf": [
                 {
                     "if": {
                         "properties": {
