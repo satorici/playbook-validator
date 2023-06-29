@@ -113,3 +113,18 @@ def test_unnamed_monitor():
 
     with pytest.raises(PlaybookValidationError):
         validate_playbook(playbook)
+
+
+def test_bad_timeout_settings():
+    playbook = {
+        "settings": {
+            "timeout": 1,
+            "commandTimeout": 2,
+        },
+        "cmd": [
+            ["echo"],
+        ],
+    }
+
+    with pytest.raises(PlaybookValidationError):
+        validate_playbook(playbook)

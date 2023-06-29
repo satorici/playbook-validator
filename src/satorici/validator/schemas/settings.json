@@ -38,6 +38,9 @@
         },
         "report": {
             "type": "string"
+        },
+        "commandTimeout": {
+            "type": "integer"
         }
     },
     "dependencies": {

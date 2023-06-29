@@ -96,6 +96,10 @@ def validate_settings(settings: dict):
         if not any(k.startswith("log") for k in settings):
             warnings.warn(NoLogMonitorWarning("Monitor without notifications."))
 
+    if "timeout" in settings and "commandTimeout" in settings:
+        if settings["timeout"] < settings["commandTimeout"]:
+            raise PlaybookValidationError("timeout must be greater than commandTimeout")
+
 
 def is_settings(settings: dict):
     return _is(validate_settings, settings)
