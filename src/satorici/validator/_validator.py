@@ -5,6 +5,7 @@ from copy import deepcopy
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from aws_cron_expression_validator.validator import AWSCronExpressionValidator
 from fastjsonschema import JsonSchemaValueException, compile
 
 from .exceptions import (
@@ -93,6 +94,11 @@ def validate_settings(settings: dict):
     _validate(settings_schema, settings)
 
     if "cron" in settings or "rate" in settings:
+        try:
+            AWSCronExpressionValidator.validate(settings["cron"])
+        except Exception:
+            PlaybookValidationError("Invalid cron expression")
+
         if not any(k.startswith("log") for k in settings):
             warnings.warn(NoLogMonitorWarning("Monitor without notifications."))
 

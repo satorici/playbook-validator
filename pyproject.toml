@@ -7,6 +7,7 @@ authors = [
 ]
 dependencies = [
     "fastjsonschema>=2.17.1",
+    "aws-cron-expression-validator>=1.1.6",
 ]
 requires-python = ">=3.9"
 readme = "README.md"
