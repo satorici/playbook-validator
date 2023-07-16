@@ -97,7 +97,7 @@ def validate_settings(settings: dict):
         try:
             AWSCronExpressionValidator.validate(settings["cron"])
         except Exception:
-            PlaybookValidationError("Invalid cron expression")
+            raise PlaybookValidationError("Invalid cron expression")
 
         if not any(k.startswith("log") for k in settings):
             warnings.warn(NoLogMonitorWarning("Monitor without notifications."))
