@@ -93,12 +93,13 @@ def is_test(test: dict):
 def validate_settings(settings: dict):
     _validate(settings_schema, settings)
 
-    if "cron" in settings or "rate" in settings:
+    if "cron" in settings:
         try:
             AWSCronExpressionValidator.validate(settings["cron"])
         except Exception:
             raise PlaybookValidationError("Invalid cron expression")
 
+    if "cron" in settings or "rate" in settings:
         if not any(k.startswith("log") for k in settings):
             warnings.warn(NoLogMonitorWarning("Monitor without notifications."))
 
