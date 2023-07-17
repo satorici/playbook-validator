@@ -96,8 +96,8 @@ def validate_settings(settings: dict):
     if "cron" in settings:
         try:
             AWSCronExpressionValidator.validate(settings["cron"])
-        except Exception:
-            raise PlaybookValidationError("Invalid cron expression")
+        except Exception as e:
+            raise PlaybookValidationError(f"Invalid cron expression: {e}")
 
     if "cron" in settings or "rate" in settings:
         if not any(k.startswith("log") for k in settings):
