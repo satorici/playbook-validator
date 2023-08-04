@@ -1,5 +1,6 @@
 import json
 import re
+import shlex
 import warnings
 from copy import deepcopy
 from pathlib import Path
@@ -9,6 +10,7 @@ from aws_cron_expression_validator.validator import AWSCronExpressionValidator
 from fastjsonschema import JsonSchemaValueException, compile
 
 from .exceptions import (
+    InvalidCommandError,
     NoExecutionsError,
     PlaybookValidationError,
     PlaybookVariableError,
@@ -186,6 +188,13 @@ def iterate_dict(d: dict):
                 stack.append((path + (k,), v))
             elif is_command_group(v):
                 execution_found = True
+
+                for cmd in v:
+                    try:
+                        _ = shlex.split(cmd[0])
+                    except ValueError as e:
+                        raise InvalidCommandError(f"{e} on {cmd[0]}.")
+
                 if get_reference_names(v):
                     validate_references(current, k)
 

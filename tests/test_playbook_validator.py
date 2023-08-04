@@ -74,7 +74,7 @@ def test_monitor_without_notification():
     playbook = {
         "settings": {
             "name": "aaaa",
-            "cron": "0 0 0 0 0",
+            "cron": "1 * * * ? *",
         },
         "cmd": [
             ["echo"],
@@ -141,3 +141,17 @@ def test_bad_settings():
     }
 
     validate_playbook(playbook)
+
+
+def test_invalid_command():
+    playbook = {
+        "settings": {
+            "timeout": 1,
+        },
+        "cmd": [
+            ['"'],
+        ],
+    }
+
+    with pytest.raises(PlaybookValidationError):
+        validate_playbook(playbook)

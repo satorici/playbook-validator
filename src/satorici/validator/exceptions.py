@@ -10,3 +10,7 @@ class PlaybookVariableError(PlaybookValidationError):
 
 class NoExecutionsError(PlaybookValidationError):
     pass
+
+
+class InvalidCommandError(PlaybookValidationError):
+    pass
