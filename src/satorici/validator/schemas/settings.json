@@ -41,6 +41,9 @@
         },
         "commandTimeout": {
             "type": "integer"
+        },
+        "files": {
+            "type": "boolean"
         }
     },
     "dependencies": {
