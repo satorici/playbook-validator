@@ -10,7 +10,7 @@
         "then": {
             "oneOf": [
                 {
-                    "pattern": "^assert(ReturnCode|Different|Killed)$"
+                    "pattern": "^assert(Different|Killed)$"
                 },
                 {
                     "pattern": "^assertStd(out|err)(SHA256)?$"
@@ -20,6 +20,9 @@
                 },
                 {
                     "pattern": "^assert(File|Command)Exists$"
+                },
+                {
+                    "pattern": "^assertReturnCode(Not)?$"
                 }
             ]
         }
