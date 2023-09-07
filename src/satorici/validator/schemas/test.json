@@ -25,9 +25,6 @@
         }
     },
     "properties": {
-        "assertReturnCode": {
-            "type": "integer"
-        },
         "assertDifferent": {
             "type": "boolean"
         },
@@ -36,6 +33,9 @@
         }
     },
     "patternProperties": {
+        "^assertReturnCode(Not)?$": {
+            "type": "integer"
+        },
         "^assertStd(out|err)SHA256$": {
             "type": [
                 "string",
