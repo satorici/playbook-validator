@@ -37,7 +37,11 @@
             "maximum": 100
         },
         "report": {
-            "type": "string"
+            "type": [
+                "string",
+                "array",
+                "boolean"
+            ]
         },
         "commandTimeout": {
             "type": "integer"
