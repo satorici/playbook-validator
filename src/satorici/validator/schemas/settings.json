@@ -60,32 +60,28 @@
     },
     "allOf": [
         {
-            "anyOf": [
-                {
-                    "if": {
-                        "properties": {
-                            "cron": true
-                        }
-                    },
-                    "then": {
-                        "properties": {
-                            "rate": false
-                        }
+            "if": {
+                "properties": {
+                    "cron": true
+                }
+            },
+            "then": {
+                "properties": {
+                    "rate": false
+                }
+            },
+            "else": {
+                "if": {
+                    "properties": {
+                        "rate": true
                     }
                 },
-                {
-                    "if": {
-                        "properties": {
-                            "rate": true
-                        }
-                    },
-                    "then": {
-                        "properties": {
-                            "cron": false
-                        }
+                "then": {
+                    "properties": {
+                        "cron": false
                     }
                 }
-            ]
+            }
         }
     ],
     "additionalProperties": false
