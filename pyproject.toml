@@ -6,7 +6,7 @@ authors = [
     {name = "Satori CI", email = "info@satori-ci.com"},
 ]
 dependencies = [
-    "fastjsonschema>=2.17.1",
+    "fastjsonschema>=2.18.1",
     "aws-cron-expression-validator>=1.1.6",
 ]
 requires-python = ">=3.9"
