@@ -43,9 +43,6 @@
                 "boolean"
             ]
         },
-        "commandTimeout": {
-            "type": "integer"
-        },
         "files": {
             "type": "boolean"
         }

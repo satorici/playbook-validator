@@ -33,6 +33,15 @@
         },
         "assertKilled": {
             "type": "boolean"
+        },
+        "setCommandTimeout": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "setSeverity": {
+            "type": ["integer", "null"],
+            "minimum": 1,
+            "maximum": 5
         }
     },
     "patternProperties": {
