@@ -101,22 +101,6 @@ def test_cron_monitor():
         validate_playbook(playbook)
 
 
-def test_monitor_cron():
-    playbook = {
-        "settings": {
-            "name": "aaaa",
-            "rate": "0 minutes",
-            "cron": "0 0 0 0 0",
-        },
-        "cmd": [
-            ["echo"],
-        ],
-    }
-
-    with pytest.raises(PlaybookValidationError):
-        validate_playbook(playbook)
-
-
 def test_unnamed_monitor():
     playbook = {
         "settings": {

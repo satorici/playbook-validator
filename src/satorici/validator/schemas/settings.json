@@ -57,28 +57,32 @@
     },
     "allOf": [
         {
-            "if": {
-                "properties": {
-                    "cron": true
-                }
-            },
-            "then": {
-                "properties": {
-                    "rate": false
-                }
-            },
-            "else": {
-                "if": {
-                    "properties": {
-                        "rate": true
+            "anyOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "cron": true
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "rate": false
+                        }
                     }
                 },
-                "then": {
-                    "properties": {
-                        "cron": false
+                {
+                    "if": {
+                        "properties": {
+                            "rate": true
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "cron": false
+                        }
                     }
                 }
-            }
+            ]
         }
     ],
     "additionalProperties": false
