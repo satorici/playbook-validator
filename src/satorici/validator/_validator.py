@@ -15,7 +15,7 @@ from .exceptions import (
     PlaybookValidationError,
     PlaybookVariableError,
 )
-from .warnings import NoLogMonitorWarning
+from .warnings import MissingAssertionsWarning, NoLogMonitorWarning
 
 INPUT_REGEX = re.compile(r"\$\(([\w-]+)\)")
 
@@ -179,6 +179,7 @@ def iterate_dict(d: dict):
     stack = [((), d)]
 
     execution_found = False
+    assertion_found = False
 
     while stack:
         path, current = stack.pop()
@@ -197,6 +198,11 @@ def iterate_dict(d: dict):
 
                 if get_reference_names(v):
                     validate_references(current, k)
+            elif k.startswith("assert"):
+                assertion_found = True
+
+    if not assertion_found:
+        warnings.warn(MissingAssertionsWarning("No assertions found."))
 
     if not execution_found:
         raise NoExecutionsError("No executions found.")

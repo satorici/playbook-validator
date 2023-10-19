@@ -4,3 +4,7 @@ class PlaybookWarning(UserWarning):
 
 class NoLogMonitorWarning(PlaybookWarning):
     pass
+
+
+class MissingAssertionsWarning(PlaybookWarning):
+    pass
