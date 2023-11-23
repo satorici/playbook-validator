@@ -8,3 +8,7 @@ class NoLogMonitorWarning(PlaybookWarning):
 
 class MissingAssertionsWarning(PlaybookWarning):
     pass
+
+
+class MissingNameWarning(PlaybookWarning):
+    pass

@@ -15,7 +15,7 @@ from .exceptions import (
     PlaybookValidationError,
     PlaybookVariableError,
 )
-from .warnings import MissingAssertionsWarning, NoLogMonitorWarning
+from .warnings import MissingAssertionsWarning, MissingNameWarning, NoLogMonitorWarning
 
 INPUT_REGEX = re.compile(r"\$\(([\w-]+)\)")
 
@@ -100,6 +100,9 @@ def validate_settings(settings: dict):
             AWSCronExpressionValidator.validate(settings["cron"])
         except Exception as e:
             raise PlaybookValidationError(f"Invalid cron expression: {e}")
+
+    if "name" not in settings:
+        warnings.warn(MissingNameWarning("Your playbook has no name defined"))
 
     if "cron" in settings or "rate" in settings:
         if not any(k.startswith("log") for k in settings):
