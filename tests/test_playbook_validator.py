@@ -1,20 +1,11 @@
 import pytest
-
 from satorici.validator import validate_playbook
 from satorici.validator.exceptions import PlaybookValidationError
-from satorici.validator.warnings import MissingAssertionsWarning, NoLogMonitorWarning
-
-
-def test_empty_settings():
-    playbook = {
-        "settings": {},
-        "tests": {
-            "cmd": [["echo"]],
-        },
-    }
-    with pytest.raises(PlaybookValidationError):
-        validate_playbook(playbook)
-
+from satorici.validator.warnings import (
+    MissingAssertionsWarning,
+    MissingNameWarning,
+    NoLogMonitorWarning,
+)
 
 no_execs = [
     {
@@ -165,4 +156,16 @@ def test_playbook_without_asserts():
     }
 
     with pytest.warns(MissingAssertionsWarning):
+        validate_playbook(playbook)
+
+
+def test_playbook_without_name():
+    playbook = {
+        "assertReturnCode": 0,
+        "cmd": [
+            ["echo"],
+        ],
+    }
+
+    with pytest.warns(MissingNameWarning):
         validate_playbook(playbook)

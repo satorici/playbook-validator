@@ -238,8 +238,7 @@ def validate_playbook(config: dict):
 
     config_copy = deepcopy(config)
 
-    if "settings" in config_copy:
-        validate_settings(config_copy.pop("settings"))
+    validate_settings(config_copy.pop("settings", {}))
 
     validate_test(config_copy)
 
