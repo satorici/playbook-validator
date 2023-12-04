@@ -44,6 +44,42 @@
         },
         "files": {
             "type": "boolean"
+        },
+        "cpu": {
+            "enum": [
+                256,
+                512,
+                1024,
+                2048,
+                4096,
+                8192,
+                16384
+            ]
+        },
+        "memory": {
+            "type": "integer",
+            "oneOf": [
+                {
+                    "enum": [
+                        512
+                    ]
+                },
+                {
+                    "multipleOf": 1024,
+                    "minimum": 1024,
+                    "maximum": 30720
+                },
+                {
+                    "multipleOf": 4096,
+                    "minimum": 30721,
+                    "maximum": 61440
+                },
+                {
+                    "multipleOf": 8192,
+                    "minimum": 61441,
+                    "maximum": 122880
+                }
+            ]
         }
     },
     "dependencies": {
@@ -52,6 +88,12 @@
         ],
         "rate": [
             "name"
+        ],
+        "cpu": [
+            "memory"
+        ],
+        "memory": [
+            "cpu"
         ]
     },
     "allOf": [

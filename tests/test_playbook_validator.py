@@ -169,3 +169,29 @@ def test_playbook_without_name():
 
     with pytest.warns(MissingNameWarning):
         validate_playbook(playbook)
+
+
+failed_cpu_memory = [
+    {
+        "settings": {"cpu": 512},
+        "cmd": [["echo"]],
+    },
+    {
+        "settings": {"memory": 1023},
+        "cmd": [["echo"]],
+    },
+    {
+        "settings": {"cpu": 512, "memory": 1023},
+        "cmd": [["echo"]],
+    },
+    {
+        "settings": {"cpu": 513, "memory": 1024},
+        "cmd": [["echo"]],
+    },
+]
+
+
+@pytest.mark.parametrize("playbook", failed_cpu_memory)
+def test_failed_cpu_memory(playbook):
+    with pytest.raises(PlaybookValidationError):
+        validate_playbook(playbook)
