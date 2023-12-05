@@ -80,6 +80,11 @@
                     "maximum": 122880
                 }
             ]
+        },
+        "storageSize": {
+            "type": "integer",
+            "minimum": 21,
+            "maximum": 200
         }
     },
     "dependencies": {
