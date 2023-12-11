@@ -16,7 +16,7 @@
             "type": "string"
         },
         "timeout": {
-            "type": "integer",
+            "type": ["integer", "null"],
             "minimum": 1
         },
         "log": {

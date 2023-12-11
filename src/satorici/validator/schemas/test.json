@@ -35,7 +35,7 @@
             "type": "boolean"
         },
         "setCommandTimeout": {
-            "type": "integer",
+            "type": ["integer", "null"],
             "minimum": 1
         },
         "setSeverity": {
