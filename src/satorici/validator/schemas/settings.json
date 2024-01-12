@@ -85,6 +85,9 @@
             "type": "integer",
             "minimum": 21,
             "maximum": 200
+        },
+        "os": {
+            "enum": ["linux", "windows"]
         }
     },
     "dependencies": {
