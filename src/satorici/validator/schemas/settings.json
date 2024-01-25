@@ -88,6 +88,9 @@
         },
         "os": {
             "enum": ["linux", "windows"]
+        },
+        "image": {
+            "type": "string"
         }
     },
     "dependencies": {
