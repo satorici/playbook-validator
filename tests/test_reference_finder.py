@@ -6,28 +6,28 @@ from satorici.validator.exceptions import PlaybookVariableError
 failed_refs = [
     {
         # Non existing ref
-        "cmd": ["$(input)"],
+        "cmd": ["${{input}}"],
     },
     {
         # Ref is not an input
         "other": ["echo dummy"],
-        "cmd": ["$(other)"],
+        "cmd": ["${{other}}"],
     },
     {
         # The input exists after the ref
-        "cmd": ["$(input)"],
+        "cmd": ["${{input}}"],
         "input": [["dummy"]],
     },
     {
         # Ref a test without inputs
         "test": {
-            "cmd": ["$(test)"],
+            "cmd": ["${{test}}"],
         }
     },
     {
         # Ref an input after the parent
         "test": {
-            "cmd": ["$(input)"],
+            "cmd": ["${{input}}"],
         },
         "input": [["dummy"]],
     },
@@ -36,7 +36,7 @@ failed_refs = [
         "root": {
             "input": [["dummy"]],
             "root": {
-                "cmd": ["$(root)"],
+                "cmd": ["${{root}}"],
             },
         },
     },
@@ -47,7 +47,7 @@ failed_refs = [
                 "input": [["dummy"]],
             },
             "sub2": {
-                "cmd": ["$(input)"],
+                "cmd": ["${{input}}"],
             },
         },
     },
@@ -58,7 +58,7 @@ failed_refs = [
                 "cmd": ["echo"],
             },
             "sub2": {
-                "cmd": ["$(sub1)"],
+                "cmd": ["${{sub1}}"],
             },
         },
     },
@@ -75,27 +75,27 @@ passed_refs = [
     {
         # Ref an adjacent input
         "input": [["1"]],
-        "cmd": ["$(input)"],
+        "cmd": ["${{input}}"],
     },
     {
         # Ref a parent input
         "input": [["1"]],
         "root": {
-            "cmd": ["$(input)"],
+            "cmd": ["${{input}}"],
         },
     },
     {
         # Ref a parent that has inputs
         "root": {
             "input": [["1"]],
-            "cmd": ["$(root)"],
+            "cmd": ["${{root}}"],
         }
     },
     {
         # Ref a parent that has inputs before the caller
         "root": {
             "child1": {
-                "cmd": ["$(root)"],
+                "cmd": ["${{root}}"],
             },
             "child2": {"input": [["1"]]},
         }

@@ -17,7 +17,7 @@ from .exceptions import (
 )
 from .warnings import MissingAssertionsWarning, MissingNameWarning, NoLogMonitorWarning
 
-INPUT_REGEX = re.compile(r"\$\(([\w-]+)\)")
+INPUT_REGEX = re.compile(r"\$\{\{([\w-]+)\}\}")
 
 SCHEMAS = Path(__file__).parent / "schemas"
 
