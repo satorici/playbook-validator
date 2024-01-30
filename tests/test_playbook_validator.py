@@ -8,7 +8,7 @@ from satorici.validator.warnings import (
 )
 
 
-def test_playbook_with_executions():
+def test_minimal_playbook():
     validate_playbook({"input": [["1"]], "cmd": ["echo $(input)"]})
 
 
