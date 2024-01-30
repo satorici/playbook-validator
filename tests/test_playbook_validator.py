@@ -7,12 +7,17 @@ from satorici.validator.warnings import (
     NoLogMonitorWarning,
 )
 
+
+def test_playbook_with_executions():
+    validate_playbook({"input": [["1"]], "cmd": ["echo $(input)"]})
+
+
 no_execs = [
     {
-        "tests": {"input": ["1"]},
+        "tests": {"input": [["1"]]},
     },
     {
-        "input": ["1"],
+        "input": [["1"]],
     },
 ]
 
@@ -25,11 +30,9 @@ def test_playbook_without_executions(playbook):
 
 with_execs = [
     {
-        "tests": {"cmd": [["echo"]]},
+        "tests": {"cmd": ["echo"]},
     },
-    {
-        "cmd": [["echo"]],
-    },
+    {"cmd": ["echo"]},
 ]
 
 
@@ -41,9 +44,7 @@ def test_playbook_with_executions(playbook):
 def test_wrong_assert():
     playbook = {
         "assertStdoutGibberish": 1,
-        "cmd": [
-            ["echo"],
-        ],
+        "cmd": ["echo"],
     }
 
     with pytest.raises(PlaybookValidationError):
@@ -53,9 +54,7 @@ def test_wrong_assert():
 def test_correct_assert():
     playbook = {
         "assertReturnCode": 1,
-        "cmd": [
-            ["echo"],
-        ],
+        "cmd": ["echo"],
     }
 
     validate_playbook(playbook)
@@ -67,9 +66,7 @@ def test_monitor_without_notification():
             "name": "aaaa",
             "cron": "1 * * * ? *",
         },
-        "cmd": [
-            ["echo"],
-        ],
+        "cmd": ["echo"],
     }
 
     with pytest.warns(NoLogMonitorWarning):
@@ -83,9 +80,7 @@ def test_cron_monitor():
             "cron": "0 0 0 0 0",
             "rate": "0 minutes",
         },
-        "cmd": [
-            ["echo"],
-        ],
+        "cmd": ["echo"],
     }
 
     with pytest.raises(PlaybookValidationError):
@@ -97,9 +92,7 @@ def test_unnamed_monitor():
         "settings": {
             "rate": "0 minutes",
         },
-        "cmd": [
-            ["echo"],
-        ],
+        "cmd": ["echo"],
     }
 
     with pytest.raises(PlaybookValidationError):
@@ -112,9 +105,7 @@ def test_bad_timeout_settings():
             "timeout": 1,
             "commandTimeout": 2,
         },
-        "cmd": [
-            ["echo"],
-        ],
+        "cmd": ["echo"],
     }
 
     with pytest.raises(PlaybookValidationError):
@@ -126,9 +117,7 @@ def test_bad_settings():
         "settings": {
             "timeout": 1,
         },
-        "cmd": [
-            ["echo"],
-        ],
+        "cmd": ["echo"],
     }
 
     validate_playbook(playbook)
@@ -139,9 +128,7 @@ def test_invalid_command():
         "settings": {
             "timeout": 1,
         },
-        "cmd": [
-            ['"'],
-        ],
+        "cmd": ['"'],
     }
 
     with pytest.raises(PlaybookValidationError):
@@ -150,9 +137,7 @@ def test_invalid_command():
 
 def test_playbook_without_asserts():
     playbook = {
-        "cmd": [
-            ["echo"],
-        ],
+        "cmd": ["echo"],
     }
 
     with pytest.warns(MissingAssertionsWarning):
@@ -162,9 +147,7 @@ def test_playbook_without_asserts():
 def test_playbook_without_name():
     playbook = {
         "assertReturnCode": 0,
-        "cmd": [
-            ["echo"],
-        ],
+        "cmd": ["echo"],
     }
 
     with pytest.warns(MissingNameWarning):
@@ -172,22 +155,10 @@ def test_playbook_without_name():
 
 
 failed_cpu_memory = [
-    {
-        "settings": {"cpu": 512},
-        "cmd": [["echo"]],
-    },
-    {
-        "settings": {"memory": 1023},
-        "cmd": [["echo"]],
-    },
-    {
-        "settings": {"cpu": 512, "memory": 1023},
-        "cmd": [["echo"]],
-    },
-    {
-        "settings": {"cpu": 513, "memory": 1024},
-        "cmd": [["echo"]],
-    },
+    {"settings": {"cpu": 512}, "cmd": ["echo"]},
+    {"settings": {"memory": 1023}, "cmd": ["echo"]},
+    {"settings": {"cpu": 512, "memory": 1023}, "cmd": ["echo"]},
+    {"settings": {"cpu": 513, "memory": 1024}, "cmd": ["echo"]},
 ]
 
 

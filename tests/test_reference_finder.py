@@ -6,37 +6,37 @@ from satorici.validator.exceptions import PlaybookVariableError
 failed_refs = [
     {
         # Non existing ref
-        "cmd": [["$(input)"]],
+        "cmd": ["$(input)"],
     },
     {
         # Ref is not an input
-        "other": [["echo dummy"]],
-        "cmd": [["$(other)"]],
+        "other": ["echo dummy"],
+        "cmd": ["$(other)"],
     },
     {
         # The input exists after the ref
-        "cmd": [["$(input)"]],
-        "input": ["dummy"],
+        "cmd": ["$(input)"],
+        "input": [["dummy"]],
     },
     {
         # Ref a test without inputs
         "test": {
-            "cmd": [["$(test)"]],
+            "cmd": ["$(test)"],
         }
     },
     {
         # Ref an input after the parent
         "test": {
-            "cmd": [["$(input)"]],
+            "cmd": ["$(input)"],
         },
-        "input": ["dummy"],
+        "input": [["dummy"]],
     },
     {
         # Nearest ref is not an input
         "root": {
-            "input": ["dummy"],
+            "input": [["dummy"]],
             "root": {
-                "cmd": [["$(root)"]],
+                "cmd": ["$(root)"],
             },
         },
     },
@@ -44,10 +44,10 @@ failed_refs = [
         # Ref a non visible input
         "root": {
             "sub1": {
-                "input": ["dummy"],
+                "input": [["dummy"]],
             },
             "sub2": {
-                "cmd": [["$(input)"]],
+                "cmd": ["$(input)"],
             },
         },
     },
@@ -55,10 +55,10 @@ failed_refs = [
         # Ref an adjacent test without inputs
         "root": {
             "sub1": {
-                "cmd": [["echo"]],
+                "cmd": ["echo"],
             },
             "sub2": {
-                "cmd": [["$(sub1)"]],
+                "cmd": ["$(sub1)"],
             },
         },
     },
@@ -74,41 +74,37 @@ def test_failed_references(playbook):
 passed_refs = [
     {
         # Ref an adjacent input
-        "input": ["1"],
-        "cmd": [["$(input)"]],
+        "input": [["1"]],
+        "cmd": ["$(input)"],
     },
     {
         # Ref a parent input
-        "input": ["1"],
+        "input": [["1"]],
         "root": {
-            "cmd": [["$(input)"]],
+            "cmd": ["$(input)"],
         },
     },
     {
         # Ref a parent that has inputs
         "root": {
-            "input": ["1"],
-            "cmd": [["$(root)"]],
+            "input": [["1"]],
+            "cmd": ["$(root)"],
         }
     },
     {
         # Ref a parent that has inputs before the caller
         "root": {
             "child1": {
-                "cmd": [["$(root)"]],
+                "cmd": ["$(root)"],
             },
-            "child2": {
-                "input": ["1"],
-            },
+            "child2": {"input": [["1"]]},
         }
     },
     {
         # Ref an adjacent test that has one input
         "root": {
-            "sub": {
-                "input": ["1"],
-            },
-            "cmd": [["$(sub)"]],
+            "sub": {"input": [["1"]]},
+            "cmd": ["$(sub)"],
         },
     },
 ]

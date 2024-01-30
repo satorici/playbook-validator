@@ -131,11 +131,11 @@ def has_input(d: dict[str]):
     return False
 
 
-def get_reference_names(command_block: list[list[str]]):
+def get_reference_names(command_block: list[str]):
     variables: set[str] = set()
 
     for command in command_block:
-        variables.update(INPUT_REGEX.findall(command[0]))
+        variables.update(INPUT_REGEX.findall(command))
 
     return variables
 
@@ -156,7 +156,7 @@ def validate_references(node: dict[str], cmd_key: str):
                 failed = True
                 break
 
-        for key, value in (i for i in current.items() if "^" not in i[0]):
+        for key, value in (i for i in current.items() if "^" != i[0][0]):
             if key == limit_key:
                 limit_key = current.get("^key")
                 current = current.get("^dict")
@@ -187,7 +187,7 @@ def iterate_dict(d: dict):
     while stack:
         path, current = stack.pop()
 
-        for k, v in (i for i in current.items() if "^" not in i[0]):
+        for k, v in (i for i in current.items() if "^" != i[0][0]):
             if isinstance(v, dict):
                 stack.append((path + (k,), v))
             elif is_command_group(v):
@@ -195,9 +195,9 @@ def iterate_dict(d: dict):
 
                 for cmd in v:
                     try:
-                        _ = shlex.split(cmd[0])
+                        _ = shlex.split(cmd)
                     except ValueError as e:
-                        raise InvalidCommandError(f"{e} on {cmd[0]}.")
+                        raise InvalidCommandError(f"{e} on {cmd}.")
 
                 if get_reference_names(v):
                     validate_references(current, k)
