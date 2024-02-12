@@ -91,6 +91,10 @@
         },
         "image": {
             "type": "string"
+        },
+        "schema": {
+            "type": "string",
+            "pattern": "^[a-z]+$"
         }
     },
     "dependencies": {
