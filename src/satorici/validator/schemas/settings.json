@@ -92,7 +92,7 @@
         "image": {
             "type": "string"
         },
-        "schema": {
+        "scheme": {
             "type": "string",
             "pattern": "^[a-z]+$"
         }
