@@ -135,6 +135,15 @@ def test_invalid_command():
         validate_playbook(playbook)
 
 
+def test_set_parallel():
+    playbook = {
+        "install": {"setParallel": True},
+        "cmd": ['""'],
+    }
+
+    validate_playbook(playbook)
+
+
 def test_playbook_without_asserts():
     playbook = {
         "cmd": ["echo"],
