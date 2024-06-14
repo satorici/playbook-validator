@@ -38,6 +38,9 @@
             "type": ["integer", "null"],
             "minimum": 1
         },
+        "setParallel": {
+            "type": "boolean"
+        },
         "setSeverity": {
             "type": ["integer", "null"],
             "minimum": 1,
