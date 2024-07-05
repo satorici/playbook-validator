@@ -45,6 +45,9 @@
         "files": {
             "type": "boolean"
         },
+        "output": {
+            "type": "boolean"
+        },
         "cpu": {
             "enum": [
                 256,
