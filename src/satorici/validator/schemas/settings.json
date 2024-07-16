@@ -101,6 +101,13 @@
         "scheme": {
             "type": "string",
             "pattern": "^[a-z]+$"
+        },
+        "gallery": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "format": "uri"
+            }
         }
     },
     "dependencies": {
