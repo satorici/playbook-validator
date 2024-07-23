@@ -35,7 +35,7 @@
             "type": "integer",
             "maximum": 100
         },
-        "report": {
+        "saveReport": {
             "type": [
                 "string",
                 "array",
@@ -45,7 +45,7 @@
         "files": {
             "type": "boolean"
         },
-        "output": {
+        "saveOutput": {
             "type": "boolean"
         },
         "public": {
