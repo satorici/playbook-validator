@@ -48,9 +48,6 @@
         "saveOutput": {
             "type": "boolean"
         },
-        "public": {
-            "type": "boolean"
-        },
         "cpu": {
             "enum": [
                 256,
