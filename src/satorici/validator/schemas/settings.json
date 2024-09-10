@@ -111,6 +111,9 @@
             "items": {
                 "type": "string"
             }
+        },
+        "example": {
+            "type": "string"
         }
     },
     "dependencies": {
