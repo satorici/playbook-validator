@@ -190,6 +190,8 @@ def iterate_dict(d: dict):
         for k, v in (i for i in current.items() if "^" != i[0][0]):
             if isinstance(v, dict):
                 stack.append((path + (k,), v))
+            elif k.startswith("assert"):
+                assertion_found = True
             elif is_command_group(v):
                 execution_found = True
 
@@ -201,8 +203,6 @@ def iterate_dict(d: dict):
 
                 if get_reference_names(v):
                     validate_references(current, k)
-            elif k.startswith("assert"):
-                assertion_found = True
 
     if not assertion_found:
         warnings.warn(MissingAssertionsWarning("No assertions found."))
