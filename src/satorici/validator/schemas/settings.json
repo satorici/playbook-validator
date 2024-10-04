@@ -114,6 +114,9 @@
         },
         "example": {
             "type": "string"
+        },
+        "clone": {
+            "type": "boolean"
         }
     },
     "dependencies": {
