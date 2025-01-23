@@ -117,6 +117,12 @@
         },
         "clone": {
             "type": "boolean"
+        },
+        "redacted": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         }
     },
     "dependencies": {
