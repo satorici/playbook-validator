@@ -45,6 +45,9 @@
             "type": ["integer", "null"],
             "minimum": 1,
             "maximum": 5
+        },
+        "setOutput": {
+            "type": "string"
         }
     },
     "patternProperties": {
