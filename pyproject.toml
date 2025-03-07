@@ -1,6 +1,6 @@
 [project]
 name = "satori-playbook-validator"
-version = "3.7.14"
+version = "3.7.15"
 description = ""
 authors = [
     {name = "Satori CI", email = "info@satori-ci.com"},
