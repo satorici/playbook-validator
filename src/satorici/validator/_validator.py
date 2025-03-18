@@ -21,6 +21,15 @@ INPUT_REGEX = re.compile(r"\$\{\{([\w-]+)\}\}")
 
 SCHEMAS = Path(__file__).parent / "schemas"
 
+
+def _cron_format(value: str):
+    try:
+        AWSCronExpressionValidator.validate(value)
+        return True
+    except Exception as e:
+        raise PlaybookValidationError(f"Invalid cron expression: {e}")
+
+
 with (
     open(SCHEMAS / "command.json") as commands,
     open(SCHEMAS / "input.json") as inputs,
@@ -38,7 +47,9 @@ with (
     commands_schema = compile(json.loads(commands.read()))
     inputs_schema = compile(json.loads(inputs.read()))
     imports_schema = compile(json.loads(imports.read()))
-    settings_schema = compile(json.loads(settings.read()))
+    settings_schema = compile(
+        json.loads(settings.read()), formats={"cron": _cron_format}
+    )
     test_schema = compile(
         definition=json.loads(test.read()),
         handlers={"file": file_ref_loc},
@@ -94,12 +105,6 @@ def is_test(test: dict):
 
 def validate_settings(settings: dict):
     _validate(settings_schema, settings)
-
-    if "cron" in settings:
-        try:
-            AWSCronExpressionValidator.validate(settings["cron"])
-        except Exception as e:
-            raise PlaybookValidationError(f"Invalid cron expression: {e}")
 
     if "name" not in settings:
         warnings.warn(MissingNameWarning("Your playbook has no name defined"))
