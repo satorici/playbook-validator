@@ -35,14 +35,20 @@
             "type": "boolean"
         },
         "setCommandTimeout": {
-            "type": ["integer", "null"],
+            "type": [
+                "integer",
+                "null"
+            ],
             "minimum": 1
         },
         "setParallel": {
             "type": "boolean"
         },
         "setSeverity": {
-            "type": ["integer", "null"],
+            "type": [
+                "integer",
+                "null"
+            ],
             "minimum": 1,
             "maximum": 5
         },
@@ -95,18 +101,43 @@
         }
     },
     "additionalProperties": {
-        "anyOf": [
+        "allOf": [
             {
-                "$ref": "file://./import.json"
+                "if": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "then": {
+                    "oneOf": [
+                        {
+                            "$ref": "file://./import.json"
+                        },
+                        {
+                            "$ref": "file://./command.json"
+                        }
+                    ]
+                }
             },
             {
-                "$ref": "file://./input.json"
+                "if": {
+                    "type": "array",
+                    "items": {
+                        "type": "array"
+                    }
+                },
+                "then": {
+                    "$ref": "file://./input.json"
+                }
             },
             {
-                "$ref": "file://./command.json"
-            },
-            {
-                "$ref": "#"
+                "if": {
+                    "type": "object"
+                },
+                "then": {
+                    "$ref": "#"
+                }
             }
         ]
     }
