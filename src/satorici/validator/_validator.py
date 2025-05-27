@@ -204,7 +204,7 @@ def iterate_dict(d: dict):
                     try:
                         _ = shlex.split(cmd)
                     except ValueError as e:
-                        raise InvalidCommandError(f"{e} on {cmd}.")
+                        raise InvalidCommandError(f"{e} on: {cmd}.")
 
                 if get_reference_names(v):
                     validate_references(current, k)
