@@ -110,7 +110,7 @@
                     }
                 },
                 "then": {
-                    "oneOf": [
+                    "anyOf": [
                         {
                             "$ref": "file://./import.json"
                         },
