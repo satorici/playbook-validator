@@ -175,3 +175,15 @@ failed_cpu_memory = [
 def test_failed_cpu_memory(playbook):
     with pytest.raises(PlaybookValidationError):
         validate_playbook(playbook)
+
+
+def test_imports():
+    playbook = {
+        "settings": {
+            "name": "Import playbooks",
+        },
+        "import": ["file://pass.yml", "satori://secrets/trufflehog.yml"],
+        "cmd": ["echo"],
+    }
+
+    validate_playbook(playbook)
