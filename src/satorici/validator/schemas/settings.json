@@ -85,7 +85,7 @@
                 }
             ]
         },
-        "storageSize": {
+        "storage": {
             "type": "integer",
             "minimum": 21,
             "maximum": 200
