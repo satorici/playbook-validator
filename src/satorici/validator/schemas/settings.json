@@ -87,7 +87,7 @@
         },
         "storage": {
             "type": "integer",
-            "minimum": 21,
+            "minimum": 20,
             "maximum": 200
         },
         "os": {
