@@ -45,12 +45,20 @@
             "type": "boolean"
         },
         "setSeverity": {
-            "type": [
-                "integer",
-                "null"
-            ],
-            "minimum": 0,
-            "maximum": 5
+            "oneOf": [
+                {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 5
+                },
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "string",
+                    "pattern": "^[\\w-]+(\\.[\\w-]+)*\\.stdout$"
+                }
+            ]
         },
         "setOutput": {
             "type": "string"
