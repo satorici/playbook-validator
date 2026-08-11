@@ -174,3 +174,49 @@ def test_imports():
     }
 
     validate_playbook(playbook)
+
+
+valid_expire = [
+    "1 hours",
+    "7 days",
+    "2 weeks",
+    "100 days",
+]
+
+
+@pytest.mark.parametrize("expire", valid_expire)
+def test_valid_expire(expire):
+    playbook = {
+        "settings": {
+            "name": "Expire playbook",
+            "expire": expire,
+        },
+        "cmd": ["echo"],
+    }
+
+    validate_playbook(playbook)
+
+
+invalid_expire = [
+    "7 minutes",
+    "0 days",
+    "days",
+    "7",
+    "1 day",
+    "-1 days",
+    7,
+]
+
+
+@pytest.mark.parametrize("expire", invalid_expire)
+def test_invalid_expire(expire):
+    playbook = {
+        "settings": {
+            "name": "Expire playbook",
+            "expire": expire,
+        },
+        "cmd": ["echo"],
+    }
+
+    with pytest.raises(PlaybookValidationError):
+        validate_playbook(playbook)

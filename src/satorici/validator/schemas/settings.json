@@ -6,6 +6,10 @@
         "name": {
             "type": "string"
         },
+        "expire": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*\\s+(hours|days|weeks)$"
+        },
         "description": {
             "type": "string"
         },
