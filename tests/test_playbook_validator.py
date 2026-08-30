@@ -164,6 +164,40 @@ def test_failed_cpu_memory(playbook):
         validate_playbook(playbook)
 
 
+set_severity_accept = [
+    {"setSeverity": 0, "cmd": ["echo"]},
+    {"setSeverity": 5, "cmd": ["echo"]},
+    {"setSeverity": None, "cmd": ["echo"]},
+    {"setSeverity": "echo.stdout", "cmd": ["echo"]},
+    {"setSeverity": "test.echo.stdout", "cmd": ["echo"]},
+    {"setSeverity": "scan.nmap.host-1.stdout", "cmd": ["echo"]},
+]
+
+
+@pytest.mark.parametrize("playbook", set_severity_accept)
+def test_set_severity_accept(playbook):
+    validate_playbook(playbook)
+
+
+set_severity_reject = [
+    {"setSeverity": -1, "cmd": ["echo"]},
+    {"setSeverity": 6, "cmd": ["echo"]},
+    {"setSeverity": "not a ref", "cmd": ["echo"]},
+    {"setSeverity": "echo.output", "cmd": ["echo"]},
+    {"setSeverity": "echo.stderr", "cmd": ["echo"]},
+    {"setSeverity": "echo.return_code", "cmd": ["echo"]},
+    {"setSeverity": "echo", "cmd": ["echo"]},
+    {"setSeverity": ".stdout", "cmd": ["echo"]},
+    {"setSeverity": 3.5, "cmd": ["echo"]},
+]
+
+
+@pytest.mark.parametrize("playbook", set_severity_reject)
+def test_set_severity_reject(playbook):
+    with pytest.raises(PlaybookValidationError):
+        validate_playbook(playbook)
+
+
 def test_imports():
     playbook = {
         "settings": {
