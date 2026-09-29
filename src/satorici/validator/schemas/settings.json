@@ -125,6 +125,39 @@
             "items": {
                 "type": "string"
             }
+        },
+        "notify": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "result": {
+                        "enum": ["fail", "pass"]
+                    },
+                    "severity": {
+                        "type": "array",
+                        "minItems": 1,
+                        "uniqueItems": true,
+                        "items": {
+                            "enum": [
+                                "info",
+                                "low",
+                                "medium",
+                                "high",
+                                "critical",
+                                "blocker"
+                            ]
+                        }
+                    },
+                    "to": {
+                        "type": "string",
+                        "pattern": "^(slack|email|discord|datadog|telegram)://.+$"
+                    }
+                },
+                "required": ["result", "to"],
+                "additionalProperties": false
+            }
         }
     },
     "dependencies": {

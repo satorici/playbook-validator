@@ -1,4 +1,7 @@
+import warnings
+
 import pytest
+
 from satorici.validator import validate_playbook
 from satorici.validator.exceptions import PlaybookValidationError
 from satorici.validator.warnings import (
@@ -219,4 +222,87 @@ def test_invalid_expire(expire):
     }
 
     with pytest.raises(PlaybookValidationError):
+        validate_playbook(playbook)
+
+
+def test_valid_notify():
+    playbook = {
+        "settings": {
+            "name": "Notify playbook",
+            "notify": [
+                {
+                    "result": "fail",
+                    "severity": ["high", "critical", "blocker"],
+                    "to": "slack://ID1:ID2",
+                },
+                {
+                    "result": "fail",
+                    "to": "email://security@example.com",
+                },
+            ],
+        },
+        "cmd": ["echo"],
+    }
+
+    validate_playbook(playbook)
+
+
+valid_notify_to = [
+    "slack://ID1:ID2",
+    "email://security@example.com",
+    "discord://channel",
+    "datadog://key",
+    "telegram://bot:chat",
+]
+
+
+@pytest.mark.parametrize("to", valid_notify_to)
+def test_valid_notify_schemes(to):
+    playbook = {
+        "settings": {
+            "name": "Notify playbook",
+            "notify": [{"result": "pass", "to": to}],
+        },
+        "cmd": ["echo"],
+    }
+
+    validate_playbook(playbook)
+
+
+invalid_notify = [
+    [{"result": "error", "to": "slack://ID1:ID2"}],
+    [{"result": "fail", "severity": ["unknown"], "to": "slack://ID1:ID2"}],
+    [{"result": "fail", "severity": [], "to": "slack://ID1:ID2"}],
+    [{"result": "fail", "to": "http://example.com"}],
+    [{"result": "fail"}],
+    [{"result": "fail", "to": "slack://ID1:ID2", "extra": True}],
+]
+
+
+@pytest.mark.parametrize("notify", invalid_notify)
+def test_invalid_notify(notify):
+    playbook = {
+        "settings": {
+            "name": "Notify playbook",
+            "notify": notify,
+        },
+        "cmd": ["echo"],
+    }
+
+    with pytest.raises(PlaybookValidationError):
+        validate_playbook(playbook)
+
+
+def test_monitor_with_notify():
+    playbook = {
+        "settings": {
+            "name": "aaaa",
+            "cron": "1 * * * ? *",
+            "notify": [{"result": "fail", "to": "slack://ID1:ID2"}],
+        },
+        "cmd": ["echo"],
+    }
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", NoLogMonitorWarning)
         validate_playbook(playbook)

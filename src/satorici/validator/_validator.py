@@ -110,7 +110,9 @@ def validate_settings(settings: dict):
         warnings.warn(MissingNameWarning("Your playbook has no name defined"))
 
     if "cron" in settings or "rate" in settings:
-        if not any(k.startswith("log") for k in settings):
+        if "notify" not in settings and not any(
+            k.startswith("log") for k in settings
+        ):
             warnings.warn(NoLogMonitorWarning("Monitor without notifications."))
 
 
