@@ -163,7 +163,7 @@
                         "pattern": "^(slack|email|discord|datadog|telegram)://.+$"
                     }
                 },
-                "required": ["result", "to"],
+                "required": ["to"],
                 "additionalProperties": false
             }
         }
