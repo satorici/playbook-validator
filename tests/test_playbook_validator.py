@@ -233,6 +233,7 @@ def test_valid_notify():
                 {
                     "result": "fail",
                     "severity": ["high", "critical", "blocker"],
+                    "watch": ["issue-status", "finish"],
                     "to": "slack://ID1:ID2",
                 },
                 {
@@ -273,6 +274,8 @@ invalid_notify = [
     [{"result": "error", "to": "slack://ID1:ID2"}],
     [{"result": "fail", "severity": ["unknown"], "to": "slack://ID1:ID2"}],
     [{"result": "fail", "severity": [], "to": "slack://ID1:ID2"}],
+    [{"result": "fail", "watch": ["unknown"], "to": "slack://ID1:ID2"}],
+    [{"result": "fail", "watch": [], "to": "slack://ID1:ID2"}],
     [{"result": "fail", "to": "http://example.com"}],
     [{"result": "fail"}],
     [{"result": "fail", "to": "slack://ID1:ID2", "extra": True}],
