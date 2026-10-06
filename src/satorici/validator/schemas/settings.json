@@ -160,7 +160,7 @@
                     },
                     "to": {
                         "type": "string",
-                        "pattern": "^(slack|email|discord|datadog|telegram)://.+$"
+                        "pattern": "^(slack|email|discord|datadog|telegram|default)(://.*)?$"
                     }
                 },
                 "required": ["to"],

@@ -254,6 +254,13 @@ valid_notify_to = [
     "discord://channel",
     "datadog://key",
     "telegram://bot:chat",
+    "slack",
+    "email",
+    "discord",
+    "telegram",
+    "default",
+    "slack://",
+    "email://",
 ]
 
 
