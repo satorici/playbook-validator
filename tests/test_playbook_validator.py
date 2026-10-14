@@ -67,7 +67,7 @@ def test_monitor_without_notification():
     playbook = {
         "settings": {
             "name": "aaaa",
-            "cron": "1 * * * ? *",
+            "cron": "1 * * * *",
         },
         "cmd": ["echo"],
     }
@@ -307,7 +307,7 @@ def test_monitor_with_notify():
     playbook = {
         "settings": {
             "name": "aaaa",
-            "cron": "1 * * * ? *",
+            "cron": "1 * * * *",
             "notify": [{"result": "fail", "to": "slack://ID1:ID2"}],
         },
         "cmd": ["echo"],

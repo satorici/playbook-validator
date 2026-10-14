@@ -6,7 +6,7 @@ from copy import deepcopy
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from aws_cron_expression_validator.validator import AWSCronExpressionValidator
+from croniter import croniter
 from fastjsonschema import JsonSchemaValueException, compile
 
 from .exceptions import (
@@ -23,11 +23,11 @@ SCHEMAS = Path(__file__).parent / "schemas"
 
 
 def _cron_format(value: str):
-    try:
-        AWSCronExpressionValidator.validate(value)
+    # Only standard 5 field expressions
+    if len(value.split()) == 5 and croniter.is_valid(value):
         return True
-    except Exception as e:
-        raise PlaybookValidationError(f"Invalid cron expression: {e}")
+
+    raise PlaybookValidationError(f"Invalid cron expression: {value}")
 
 
 with (
